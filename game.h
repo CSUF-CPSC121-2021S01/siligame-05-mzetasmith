@@ -82,30 +82,30 @@ class Game : public graphics::AnimationEventListener,
   void UpdateScreen() {
     screen_.DrawRectangle(0, 0, KWidth_, KHeight_,
                           graphics::Color(255, 255, 255));
-    if (HasLost() == false) {
-      std::string s = std::to_string(score_);
-      screen_.DrawText(20, 20, "Score: " + s, 36, graphics::Color(0, 0, 0));
-      for (int i = 0; i < opponents.size(); i++) {
-        if (opponents[i].get()->GetIsActive() == true) {
-          opponents[i].get()->Draw(screen_);
-        }
+    // if (HasLost() == false) {
+    std::string s = std::to_string(score_);
+    screen_.DrawText(20, 20, "Score: " + s, 36, graphics::Color(0, 0, 0));
+    for (int i = 0; i < opponents.size(); i++) {
+      if (opponents[i].get()->GetIsActive() == true) {
+        opponents[i].get()->Draw(screen_);
       }
-      for (int i = 0; i < oppProjVec_.size(); i++) {
-        if (oppProjVec_[i].get()->GetIsActive() == true) {
-          oppProjVec_[i].get()->Draw(screen_);
-        }
-      }
-      for (int i = 0; i < playProjVec_.size(); i++) {
-        if (playProjVec_[i].get()->GetIsActive() == true) {
-          playProjVec_[i].get()->Draw(screen_);
-        }
-      }
-      if (player_.GetIsActive() == true) {
-        player_.Draw(screen_);
-      }
-    } else {
-      screen_.DrawText(300, 200, "You Lose :C", 36, graphics::Color(0, 0, 0));
     }
+    for (int i = 0; i < oppProjVec_.size(); i++) {
+      if (oppProjVec_[i].get()->GetIsActive() == true) {
+        oppProjVec_[i].get()->Draw(screen_);
+      }
+    }
+    for (int i = 0; i < playProjVec_.size(); i++) {
+      if (playProjVec_[i].get()->GetIsActive() == true) {
+        playProjVec_[i].get()->Draw(screen_);
+      }
+    }
+    if (player_.GetIsActive() == true) {
+      player_.Draw(screen_);
+    }
+    // } else {
+    // screen_.DrawText(300, 200, "You Lose :C", 36, graphics::Color(0, 0, 0));
+    // }
   }
 
   void LaunchProjectiles() {
@@ -128,18 +128,18 @@ class Game : public graphics::AnimationEventListener,
     }
   }
   void RemoveInactive() {
-    for (int i = 0; i > opponents.size(); i++) {
+    for (int i = opponents.size() - 1; i > -1; i--) {
       if (opponents[i]->GetIsActive() == false) {
-        opponents.erase(opponents.begin() + i);
+        opponents.erase(opponents.end() - i);
       }
     }
-    for (int i = oppProjVec_.size() - 1; i < -1; i--) {
+    for (int i = oppProjVec_.size() - 1; i > -1; i--) {
       if (oppProjVec_[i]->GetIsActive() == false) {
-        oppProjVec_.erase(oppProjVec_.begin() - i);
+        oppProjVec_.erase(oppProjVec_.end() - i);
       }
     }
-    for (int i = 0; i < playProjVec_.size(); i++) {
-      if (playProjVec_[i].get()->GetIsActive() == false) {
+    for (int i = playProjVec_.size() - 1; i > -1; i--) {
+      if (playProjVec_[i]->GetIsActive() == false) {
         playProjVec_.erase(playProjVec_.end() - i);
       }
     }
@@ -147,9 +147,9 @@ class Game : public graphics::AnimationEventListener,
   void Start() { screen_.ShowUntilClosed(); }
 
   void OnAnimationStep() override {
-    if (opponents.size() < 5) {
+    /*if (opponents.size() < 5) {
       CreateOpponents();
-    }
+    }*/
     MoveGameElements();
     LaunchProjectiles();
     FilterIntersections();

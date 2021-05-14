@@ -1,6 +1,6 @@
+#include <random>
 #include <string>
 #include <vector>
-#include <random>
 
 #include "cpputils/graphics/image.h"
 #include "cpputils/graphics/image_event.h"
@@ -16,15 +16,17 @@ class Game : public graphics::AnimationEventListener,
   Game(int KWidth, int KHeight) : KWidth_(KWidth), KHeight_(KHeight) {}
   graphics::Image& GetGameScreen() { return screen_; }
   int GetScore() { return score_; }
-  std::vector< std::unique_ptr<Opponent> >& GetOpponents() { return opponents; }
-  std::vector< std::unique_ptr<OpponentProjectile> >& GetOpponentProjectiles() {
+  std::vector<std::unique_ptr<Opponent> >& GetOpponents() { return opponents; }
+  std::vector<std::unique_ptr<OpponentProjectile> >& GetOpponentProjectiles() {
     return oppProjVec_;
   }
-  std::vector< std::unique_ptr<PlayerProjectile> >& GetPlayerProjectiles() { return playProjVec_; }
+  std::vector<std::unique_ptr<PlayerProjectile> >& GetPlayerProjectiles() {
+    return playProjVec_;
+  }
   Player& GetPlayer() { return player_; }
   void CreateOpponents() {
-    opponents.push_back(std::unique_ptr<Opponent> (new Opponent(
-              (rand() % KWidth_), 30)));
+    opponents.push_back(
+        std::unique_ptr<Opponent>(new Opponent((rand() % KWidth_), 30)));
   }
   void MoveGameElements() {
     for (int i = 0; i < opponents.size(); i++) {
@@ -82,7 +84,7 @@ class Game : public graphics::AnimationEventListener,
                           graphics::Color(255, 255, 255));
     if (HasLost() == false) {
       std::string s = std::to_string(score_);
-      screen_.DrawText(20, 20, "Score: " + s, 36, graphics::Color(0,0,0));
+      screen_.DrawText(20, 20, "Score: " + s, 36, graphics::Color(0, 0, 0));
       for (int i = 0; i < opponents.size(); i++) {
         if (opponents[i].get()->GetIsActive() == true) {
           opponents[i].get()->Draw(screen_);
@@ -102,7 +104,7 @@ class Game : public graphics::AnimationEventListener,
         player_.Draw(screen_);
       }
     } else {
-      screen_.DrawText(300, 200, "You Lose :C", 36, graphics::Color(0,0,0));
+      screen_.DrawText(300, 200, "You Lose :C", 36, graphics::Color(0, 0, 0));
     }
   }
 
@@ -126,19 +128,19 @@ class Game : public graphics::AnimationEventListener,
     }
   }
   void RemoveInactive() {
-    for (int i = 0; i < opponents.size(); i++) {
-      if (opponents[i].get()->GetIsActive() == false) {
+    for (int i = 0; i > opponents.size(); i++) {
+      if (opponents[i]->GetIsActive() == false) {
         opponents.erase(opponents.begin() + i);
       }
     }
-    for (int i = 0; i < oppProjVec_.size(); i++) {
-      if (oppProjVec_[i].get()->GetIsActive() == false) {
-        oppProjVec_.erase(oppProjVec_.begin() + i);
+    for (int i = oppProjVec_.size() - 1; i < -1; i--) {
+      if (oppProjVec_[i]->GetIsActive() == false) {
+        oppProjVec_.erase(oppProjVec_.begin() - i);
       }
     }
     for (int i = 0; i < playProjVec_.size(); i++) {
       if (playProjVec_[i].get()->GetIsActive() == false) {
-        playProjVec_.erase(playProjVec_.begin() + i);
+        playProjVec_.erase(playProjVec_.end() - i);
       }
     }
   }
@@ -163,8 +165,8 @@ class Game : public graphics::AnimationEventListener,
             mouse.GetY() <= screen_.GetHeight()) {
           player_.SetX(mouse.GetX() - 25);
           player_.SetY(mouse.GetY() - 25);
-          playProjVec_.push_back(std::unique_ptr<PlayerProjectile> (
-            new PlayerProjectile(mouse.GetX() + 25, mouse.GetY() +10)));
+          playProjVec_.push_back(std::unique_ptr<PlayerProjectile>(
+              new PlayerProjectile(mouse.GetX() + 25, mouse.GetY() + 10)));
         }
         /*play_proj_count_ ++;
         if (play_proj_count_ % 20 == 0) {
@@ -184,17 +186,17 @@ class Game : public graphics::AnimationEventListener,
         }
         break;
       case graphics::MouseAction::kPressed:
-        playProjVec_.push_back(std::unique_ptr<PlayerProjectile> (
-              new PlayerProjectile(mouse.GetX() + 25, mouse.GetY() +10)));
+        playProjVec_.push_back(std::unique_ptr<PlayerProjectile>(
+            new PlayerProjectile(mouse.GetX() + 25, mouse.GetY() + 10)));
       default:
         break;
     }
   }
 
  private:
-  std::vector< std::unique_ptr<Opponent> > opponents;
-  std::vector< std::unique_ptr<OpponentProjectile> > oppProjVec_;
-  std::vector< std::unique_ptr<PlayerProjectile> > playProjVec_;
+  std::vector<std::unique_ptr<Opponent> > opponents;
+  std::vector<std::unique_ptr<OpponentProjectile> > oppProjVec_;
+  std::vector<std::unique_ptr<PlayerProjectile> > playProjVec_;
   Player player_;
   int KWidth_;
   int KHeight_;
@@ -202,7 +204,7 @@ class Game : public graphics::AnimationEventListener,
   int score_ = 0;
   bool is_alive_ = true;
   int opp_proj_count_ = 0;
-  //int play_proj_count_ = 0;
+  // int play_proj_count_ = 0;
 };
 
 #endif

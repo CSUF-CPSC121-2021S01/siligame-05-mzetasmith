@@ -1,5 +1,6 @@
-#include "game_element.h"
 #include <memory>
+
+#include "game_element.h"
 
 #ifndef OPPONENT_H
 #define OPPONENT_H
@@ -60,19 +61,22 @@ class Opponent : public GameElement {
     }
   }
   std::unique_ptr<OpponentProjectile> Launch() {
-    std::unique_ptr<OpponentProjectile> proj(new OpponentProjectile(x_, y_ + 60));
+    std::unique_ptr<OpponentProjectile> proj(
+        new OpponentProjectile(x_, y_ + 60));
     return proj;
   }
   std::unique_ptr<OpponentProjectile> LaunchProjectile() {
     count_++;
     if (count_ % 20 == 0) {
-      std::unique_ptr<OpponentProjectile> proj(new OpponentProjectile(x_, y_ + 60));
+      std::unique_ptr<OpponentProjectile> proj(
+          new OpponentProjectile(x_, y_ + 60));
       return proj;
     } else {
       return nullptr;
     }
   }
-private:
+
+ private:
   int count_;
 };
 #endif

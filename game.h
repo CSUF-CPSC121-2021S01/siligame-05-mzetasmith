@@ -110,7 +110,7 @@ class Game : public graphics::AnimationEventListener,
     opp_proj_count_++;
     if (opp_proj_count_ % 30 == 0) {
       for (int i = 0; i < opponents.size(); i++) {
-        oppProjVec_.push_back(opponents[i].get()->LaunchProjectile());
+        oppProjVec_.push_back(opponents[i].get()->Launch());
       }
     }
     if (opp_proj_count_ > 30) {
